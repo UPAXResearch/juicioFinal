@@ -7,7 +7,7 @@
 #'@examples 
 #'exportator("resultados","./resultados/resultados.csv")
 
-exportator <- function(reporteF, nombreFinal,pMacro=F){
+exportator <- function(reporteF, nombreFinal,pMacro=F,separador=",",encoding="Latin1"){
   # exportator(resultados, "resultados.csv")
   # reporteF <- bannervsbanner
   # nombreFinal <- "resultados.csv"
@@ -52,5 +52,5 @@ exportator <- function(reporteF, nombreFinal,pMacro=F){
       reporteFINAL <- plyr::rbind.fill(reporteFINAL,elTemporal)
     }
   }
-  write.csv(reporteFINAL, nombreFinal,fileEncoding = "Latin1",na = "")
+  write.csv(reporteFINAL, nombreFinal,fileEncoding = encoding,na = "",sep = separador)
 }
