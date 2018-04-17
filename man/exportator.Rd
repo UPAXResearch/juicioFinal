@@ -4,7 +4,8 @@
 \alias{exportator}
 \title{Función auxiliar para exportar los resultados generados con frecuentator. Recibe una lista y exporta todas las tablas en un csv}
 \usage{
-exportator(reporteF, nombreFinal, pMacro = F)
+exportator(reporteF, nombreFinal, pMacro = F, separador = ",",
+  encoding = "Latin1")
 }
 \arguments{
 \item{reporteF}{La lista que tiene los resultados de frecuentator}

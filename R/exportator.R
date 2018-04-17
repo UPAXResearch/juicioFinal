@@ -4,7 +4,7 @@
 #'@param pMacro Si quieres el formato para Macro, poner TRUE aqui
 #'@export
 #'@keywords exportar
-#'@examples 
+#'@examples
 #'exportator("resultados","./resultados/resultados.csv")
 
 exportator <- function(reporteF, nombreFinal,pMacro=F,separador=",",encoding="Latin1"){
@@ -14,7 +14,6 @@ exportator <- function(reporteF, nombreFinal,pMacro=F,separador=",",encoding="La
   reporteFINAL <- data.frame()
   if(pMacro){
     for(finali in 1:length(reporteF)){
-      # finali <- 1
       elTemporal <- reporteF[[finali]]
       elTemporal <- rbind(names(elTemporal),elTemporal)
       #Hago un data frame chiquito con los titulos correctos
@@ -42,10 +41,10 @@ exportator <- function(reporteF, nombreFinal,pMacro=F,separador=",",encoding="La
   }else{
     reporteFINAL <- data.frame()
     for(finali in 1:length(reporteF)){
-      # finali <- 1
       elTemporal <- reporteF[[finali]]
       elTemporal <- rbind(names(elTemporal),elTemporal)
       names(elTemporal) <- paste(LETTERS[1:length(elTemporal)],1:length(elTemporal),sep="")
+      elTemporal[,1] = as.character(elTemporal[,1])
       elTemporal[1,1] <- names(reporteF)[finali]
       salto <- elTemporal[0,]
       elTemporal <- rbind(elTemporal,NA)
