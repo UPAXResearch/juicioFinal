@@ -1,6 +1,6 @@
 Package: juicioFinal
 Title: Statistics for bros
-Version: 2.0.0.0000
+Version: 2.0.1
 Authors@R: person("All the", "bros", email = "jorgennava@gmail.com", role = c("aut", "cre"))
 Description: Such manliness, very bros, wow.
 Depends: R (>= 3.2.2),plyr,dplyr,survey,AlgDesign,readxl,multcomp,mlogit
