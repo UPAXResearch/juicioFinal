@@ -6,7 +6,7 @@
 \usage{
 frecuentator(fTtabla, fTvariables, fTlevels = T, fbanner = NULL,
   fTponderador = NULL, fTsobreQuien = NULL, fTtotal = T, fTprop = F,
-  fTusarNA = F, fTdecimales = 1)
+  fTusarNA = F, fTdecimales = 4)
 }
 \arguments{
 \item{fTtabla}{La tabla principal i.e. "la base de datos"}

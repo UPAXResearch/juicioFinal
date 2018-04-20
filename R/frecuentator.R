@@ -36,7 +36,7 @@ frecuentator<- function(
   #Utilizo los NA en el cálculo de porcentajes?
   fTusarNA=F,
   #Cuantos decimales al momento de redondear los porcentajes?
-  fTdecimales=1
+  fTdecimales=4
 ){
   # list.of.packages <- c("survey")
   # new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -49,7 +49,7 @@ frecuentator<- function(
   #                                              'ay5','ay6','ay7'),
   #              fTlevels = T,fbanner = bandera,
   #              fTponderador = 'ponderador',fTprop = T)
-  # 
+  #
   # #
   # fTtabla<-datos
   # fTvariables<-c('tom','sh1','sh2',
@@ -252,6 +252,10 @@ frecuentator<- function(
             # Estoy trabajando con lógicos
             a<-as.data.frame(table(sub[,fTvariables[zi]]))
             row.names(a)<- a$Var1
+            # Obliga a usar el valor de ponderación cuando un solo caso
+            if (nrow(sub) == 1) {
+              a$Freq<- suba[ !is.na(suba[, fTvariables[zi]]),fTponderador]
+            }
             a$Var1<-a$Freq
             names(a)<-c("total","SE")
             if("TRUE" %in% row.names(a)){
