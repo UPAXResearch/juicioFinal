@@ -5,12 +5,12 @@
 #'@param yy El string que se va a buscar
 #'@export
 #'@keywords nombres
-#'@examples 
+#'@examples
 #'nombresR(iris,"Sep")
 #'nombresR(iris,"Sepal.Len")
 
-nombresR<- function(xx,yy){
+nombresR<- function(xx,yy, zz = FALSE){
   return(
-    names(xx)[grep(yy,names(xx))]
+    names(xx)[grep(yy,names(xx), perl = zz)]
   )
 }

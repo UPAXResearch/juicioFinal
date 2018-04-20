@@ -4,7 +4,7 @@
 \alias{nombresR}
 \title{Regresa los nombres de variables de una tabla que coincidan con un string}
 \usage{
-nombresR(xx, yy)
+nombresR(xx, yy, zz = FALSE)
 }
 \arguments{
 \item{xx}{La tabla principal i.e. "la base de datos"}
