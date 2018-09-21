@@ -4,7 +4,8 @@
 \alias{maxdiffModelo}
 \title{función de maxdiff}
 \usage{
-maxdiffModelo(datos, nItems, nBloques, nItemsPorBloque, estructura = "gut")
+maxdiffModelo(datos, nItems, nBloques, nItemsPorBloque,
+  estructura = "gut")
 }
 \arguments{
 \item{datos}{la batería de datos del maxdiff}

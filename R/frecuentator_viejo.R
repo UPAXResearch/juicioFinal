@@ -1,28 +1,22 @@
-#'Función para frecuencias y pruebas de proporciones (versiòn nueva)
+#'Función para frecuencias y pruebas de proporciones (versiòn vieja)
 #'
 #'Esta función obtiene frecuencias, ponderadas o no, y pruebas de proporciones para tablas tipo encuesta. La funcion necesita el paquete survey.
 #'@param fTtabla La tabla principal i.e. "la base de datos"
 #'@param fTvariables La variable o nombres de variables de quien se va a extraer informacion (i.e. frecuencias)
 #'@param fTlevels Uso los levels de las variables en fvariables? TRUE= Uso los levels, FALSE= uso los nombres de las variables, i.e. FALSE= mi variable(s) son lógicas
 #'@param fbanner Las variables que van por banner, en caso de que se necesite
-#'@param fTanidado Una serie de variables que serán elemento para anidar el banner
 #'@param fTponderador Nombre de la variable ponderador, en caso de que exista
 #'@param fTsobreQuien Fijar un total para todos los cálculos de porcentaje
 #'@param fTtotal Agregar una fila de total en los resultados finales?
 #'@param fTprop Hacer prueba de proporciones? En vez de regresar la tabla de frecuencias se regresa una tabla de prueba de proporciones (igual a las de SPSS)
 #'@param fTusarNA Frecuentator omite por default los NA de las variables que le pedimos, pero a veces se necesitan i.e. Cuando agrupo variables para Share of Mind
 #'@param fTdecimales El redondeo de porcentaje a cuantos decimales debe ser? El default es 1
-#'@param fTtipo frecuencia y porcentaje o solo uno
-#'@param fTunion Unir diferencias
-#'@param fTpctConDif Devolver una tabla de diferencias pegadas a pct
-#'@param fTrenombref vector con nombres para filas
 #'@export
 #'@keywords frecuencias
 #'@examples
-#'frecuentator(fTtabla = iris,fTvariables = "Species",fTlevels = T,fbanner = "Species")
+#'frecuentator_viejo(fTtabla = iris,fTvariables = "Species",fTlevels = T,fbanner = "Species")
 
-
-frecuentator<- function(
+frecuentator_viejo <- function(
   #La tabla principal...
   fTtabla,
   #Las variables por las que va a cruzar...
@@ -31,8 +25,6 @@ frecuentator<- function(
   fTlevels=T,
   #Las variables del banner
   fbanner=NULL,
-  #Una serie de variables que serán elemento para anidar el banner
-  fTanidado=NULL,
   #El ponderador
   fTponderador=NULL,
   #Sobre quien voy a obtener los porcentajes? i.e. cual es el tamaño de mi base?
@@ -44,25 +36,47 @@ frecuentator<- function(
   #Utilizo los NA en el cálculo de porcentajes?
   fTusarNA=F,
   #Cuantos decimales al momento de redondear los porcentajes?
-  fTdecimales=4,
-  #frecuencia y porcentaje o solo uno
-  fTtipo=NULL,
-  #Unir diferencias
-  fTunion=F,
-  #Devolver una tabla de diferencias pegadas a pct
-  fTpctConDif=F,
-  #vector con nombres para filas
-  fTrenombref=NULL
+  fTdecimales=4
 ){
-  if(fTpctConDif==T){
-    fTdecimales=0
-    fTtipo="P"
-    fTunion=T
-  }
-
-  if(fTunion==T){
-    fTprop=F
-  }
+  # list.of.packages <- c("survey")
+  # new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  # if(length(new.packages)) install.packages(new.packages)
+  # #################################################
+  # frecuentator(fTtabla = datos,fTvariables = c('tom','sh1','sh2',
+  #                                              'sh3','sh4','sh5',
+  #                                              'sh6','sh7','ay1',
+  #                                              'ay2','ay3','ay4',
+  #                                              'ay5','ay6','ay7'),
+  #              fTlevels = T,fbanner = bandera,
+  #              fTponderador = 'ponderador',fTprop = T)
+  #
+  # #
+  # fTtabla<-datos
+  # fTvariables<-c('tom','sh1','sh2',
+  #                'sh3','sh4','sh5',
+  #                'sh6','sh7','ay1',
+  #                'ay2','ay3','ay4',
+  #                'ay5','ay6','ay7')
+  # fTlevels<-T
+  # fbanner <- bandera
+  # fTponderador<-'ponderador'
+  # fTsobreQuien<- NULL
+  # fTtotal<-T
+  # fTprop<-T
+  # # #
+  # # ############## truquitos
+  # #   fTvariables<-c("NSE")
+  # fTtabla$Segmentos <- sample(size = nrow(fTtabla),x = 1:6,replace = T)
+  # fTtabla$A9.Hijo.1.a.os<- factor(fTtabla$A9.Hijo.1.a.os)
+  # fTtabla$Segmentos<- factor(fTtabla$Segmentos)
+  #   # fTtabla$sincasos<-1
+  #   # fTtabla$sincasos[1]<-2
+  #   #
+  #   # fTtabla$sincasos<- factor(fTtabla$sincasos,labels = c("FALSE","b"))
+  #   # fTponderador<-"pond"
+  #   # fTtabla$pond[1]<-NA
+  #   # fTtabla$P1.Banamex[17]<-NA
+  # ############## truquitos FIN
 
   if(nrow(fTtabla)==0){
     FINAL<-data.frame()
@@ -75,7 +89,10 @@ frecuentator<- function(
       fTtabla$Total<- factor(rep(x = 1,nrow(fTtabla)),levels = 1,labels = "Total")
       fbanner<-"Total"
     }
-    misVarz <- unique(c(fTvariables,fbanner,fTanidado))
+    misVarz <- c(fTvariables,fbanner)
+    ################################################# Supuestos...
+    ################################################# Supuestos...
+    ################################################# Supuestos...
     ################################################# Supuestos...
 
     # Existen los nombres de variables?
@@ -84,62 +101,6 @@ frecuentator<- function(
     }
     # Subseteo
     fTtabla<-subset(x = fTtabla,select = c(misVarz,fTponderador))
-
-    #######Creacion y seleccion de variables fTanidado y colocado en fbanner
-
-
-    if(!is.null(fTanidado)){
-      nuevas<-NULL
-      #Descomentar si se quiere respetar el total
-      #fbanner2<-fbanner[!fbanner=="Total"]
-      fbanner2<-fbanner
-      #i="Ola"
-      for (i in fTanidado) {
-        nAnid<-levels(fTtabla[,i])
-        #j="PLAZA"
-        for (j in fbanner2) {
-          if(!is.factor(fTtabla[,j]))
-          {
-            fTtabla[,j]<-as.factor(fTtabla[,j])
-          }
-          nBann<-levels(fTtabla[,j])
-          #k="Oaxaca"
-          for (k in nBann) {
-
-            columna<-factor(apply(fTtabla[,c(j, i)], 1, function(x){
-              if(!any(is.na(x))){
-                if((x[1]==k & x[2]%in%c(nAnid))){
-                  return(as.character(paste0(x[1],":::",x[2])))
-                }else{
-                  return(NA)
-                }
-              }else{
-                return(NA)
-              }
-            }),c(paste0(k,":::",levels(fTtabla[,i]))))
-            fTtabla[,ncol(fTtabla)+1]<-columna
-            names(fTtabla)[ncol(fTtabla)]<- paste0(k,"_",j,"_",fTanidado)
-            nuevas<-c(nuevas, paste0(k,"_",j,"_",fTanidado))
-          }
-        }
-      }
-      fbanner<-fbanner[which(!fbanner%in%fbanner2)]
-      fbanner<-c(fbanner, nuevas)
-      misVarz<-unique(c(fTvariables, fbanner, fTanidado))
-
-      fTtabla<-subset(x = fTtabla,select = c(misVarz,fTponderador))
-      #fTlevels=T
-
-      ###A la mala vuelvo factor las variables por si se requieren
-
-      # if(any(!is.factor(fTtabla[,fTvariables]))){
-      #   for (i in fTvariables) {
-      #     fTtabla[,i]<-as.factor(fTtabla[,i])
-      #   }
-      # }
-    }
-    ######
-
     # Tengo ponderador? Debo revisar que mi ponderador no tenga casos diferentes de número...
     if(is.null(fTponderador)){
       # Si no tengo ponderador hago uno artificial...
@@ -160,20 +121,16 @@ frecuentator<- function(
     #   debo probar que aun tengo variables...
     if(!all(!sapply(X = fTtabla[,fTvariables],is.na))){
       # warning(paste("\n\n frecuentator Advertencia: hay NA en la variable ::",fTvariables[sapply(X = fTtabla[,fTvariables],FUN = function(X){!all(!is.na(X))})],":: en fTtabla \n voy a intentar corregirlo"))
-      #misVarzBis<-misVarz
       vars<- sapply(X = fTtabla,FUN = function(X){!all(!is.na(X))})
       for(vi in 1:length(names(vars)[vars])){
         # vi<-1
-        # vi<-3
-        # vi<-10
         if(all(is.na(fTtabla[,names(vars)[vars][vi]]))){
-          warning(paste("\n frecuentator Advertencia: La variable ::",names(vars)[vars][vi],":: en fTtabla está llena de NA, voy a mostarla en cero en el análisis"))
-          misVarz<- misVarz[-which(names(vars)[vars][vi]==misVarz)]
-
+          warning(paste("\n frecuentator Advertencia: La variable ::",names(vars)[vars][vi],":: en fTtabla está llena de NA, voy a omitirla del análisis"))
+          fTvariables<- fTvariables[-which(names(vars)[vars][vi]==fTvariables)]
         }
       }
     }
-    if(length(misVarz)==0){
+    if(length(fTvariables)==0){
       warning("\n frecuentator Error04: Se han omitido todas las variables del análisis porque estaban vacias, frecuencia no tiene sentido")
       return(data.frame(vacio="sin casos"))
     }
@@ -217,11 +174,26 @@ frecuentator<- function(
         }
       }
     }
-    misVarz <- unique(c(fTvariables,fbanner))
+    misVarz <- c(fTvariables,fbanner)
     fTtabla<- fTtabla[,c(misVarz,fTponderador)]
     #
     #
+    #
+    #
+    #
+    #
+    #
+    #
     ################################################# Supuestos Verificados
+    ################################################# Supuestos Verificados
+    ################################################# Supuestos Verificados
+    ################################################# Supuestos Verificados
+    ################################################# Supuestos Verificados
+    #
+    #
+    #
+    #
+    #
     #
     #
     #
@@ -234,7 +206,12 @@ frecuentator<- function(
       FINAL[nrow(FINAL)+1,"Respuesta"] <- "Total"
       # }
       row.names(FINAL) <- FINAL$Respuesta
-
+      # cat("\n\n\n\n\n\n\n\n INICIO PROCESO \n\n",
+      #     "\nVariables: ",fTvariables,
+      #     "\nBanner: ",fbanner,
+      #     "\nTiempo: ",as.character(Sys.time()),
+      #     "\n"
+      # )
     }else{
       FINAL<-data.frame(Respuesta=fTvariables,stringsAsFactors = F)
       FINAL[nrow(FINAL)+1,"Respuesta"] <- "Total"
@@ -246,22 +223,15 @@ frecuentator<- function(
       # fi <- 1
       setTxtProgressBar(pb, fi)
       fbannerMini<- fbanner[fi]
+      # cat("\nProcesando Variable ",fbannerMini,"(",fi," de ",length(fbanner),"): ")
       # Me quedo con los levels (las respuestas de cada variable banner a evaluar)
-
-      ####Modificacion cuando meto una matriz por banner
-      ####Revisa la condicion de fbannerMini si es lógico
-      if(is.logical(fTtabla[,fbannerMini])){
-        firespuestas<-TRUE
-      }else{
-        firespuestas<-levels(fTtabla[,fbannerMini])
-      }
-
+      firespuestas<-levels(fTtabla[,fbannerMini])
       # Para cada respuesta i.e. level de la variable banner a evaluar...
       for(ft in 1: length(firespuestas)){
         # ft <- 1
         # Cual es la respuesta que estoy evaluando...
         factual<-firespuestas[ft]
-
+        # cat("\n|| Calculando respuesta  ",factual,"(",ft," de ",length(firespuestas),")")
         # Subseteo a ftabla
         suba<-fTtabla[fTtabla[,fbannerMini]==factual & !is.na(fTtabla[,fbannerMini]),]
         final<-data.frame()
@@ -441,125 +411,9 @@ frecuentator<- function(
         names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",LETTERS[1:length(tablaSPMirror)],")",sep = "")
         FINALmirror <- cbind(FINALmirror,tablaSPMirror)
       }
-
-      if(!is.null(fTtipo)){
-        if(toupper(fTtipo)=="P"){
-          FINALmirror<-FINALmirror[c(1, grep(":::pct$" ,names(FINALmirror)))]
-        }else if(toupper(fTtipo)=="F"){
-          FINALmirror<-FINALmirror[c(1, grep(":::f$" ,names(FINALmirror)))]
-        }
-      }
-
-      #Sustituye los nombres de fila de FINALmirror por el vector en fTrenombref
-      if(!is.null(fTrenombref)){
-        if(length(fTrenombref)==(nrow(FINALmirror)-1)){
-          FINALmirror[,1]<-as.character(FINALmirror[,1])
-          FINALmirror[-nrow(FINALmirror),1]<-fTrenombref
-        }else{
-          warning("frecuentator: El número de elemetos en 'fTrenombref' no es igual al número de filas en la tabla")
-        }
-      }
-
       return(FINALmirror)
-
     }
     close(pb)
-
-    if(!is.null(fTtipo)){
-      if(toupper(fTtipo)=="P"){
-        FINAL<-FINAL[c(1, grep(":::pct$" ,names(FINAL)))]
-      }else if(toupper(fTtipo)=="F"){
-        FINAL<-FINAL[c(1, grep(":::f$" ,names(FINAL)))]
-      }
-    }
-
-    #Bloque que vuelve a correr frecuentator para diferencias significativas y luego pegarlo FINAL2 contiene frecuencias o porcentajes o frecuencias y portentajes
-    #FINAL contiene las diferencias significativas
-
-    #resp<-FINAL
-    #FINAL<-resp
-
-    if(fTunion){
-      FINAL2<-FINAL
-      FINAL<-frecuentator(fTtabla = fTtabla,
-                          fTvariables = fTvariables,
-                          fTlevels = fTlevels,
-                          fbanner = fbanner,
-                          fTanidado = NULL,
-                          fTponderador = fTponderador,
-                          fTsobreQuien =fTsobreQuien,
-                          fTtotal =  fTtotal,
-                          fTusarNA = fTusarNA,
-                          fTdecimales = fTdecimales,
-                          fTtipo = NULL,
-                          fTunion= F,
-                          fTprop = T)
-
-      expre<-base::sub(pattern = ":::f\\([[:alpha:]]\\)", replacement = ":::", x = names(FINAL))
-
-      expre<-expre[-1]
-
-      nuevaTab<-FINAL[1]
-      #i=expre[11]
-      for (i in expre) {
-        #Pega en una columna seguida las diferecias significativa
-        nuevaTab<-cbind(nuevaTab, FINAL2[grep(pattern = i, x = names(FINAL2),fixed = T)])
-        nuevaTab<-cbind(nuevaTab, FINAL[grep(pattern = i, x = names(FINAL),fixed = T)])
-
-      }
-      FINAL<-nuevaTab
-      #colnames(nuevaTab)
-    }
-
-    #####chunck de unión de difsig para entrega única
-    #if(fTpctConDif){
-    totales<- colSums(FINAL[-nrow(FINAL) ,grep(pattern = "pct$", x = colnames(FINAL), perl = T)], na.rm = T)
-
-    FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-totales
-
-    if(fTpctConDif){
-      bases<- FINAL[nrow(FINAL), grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)]
-
-      #FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-bases
-      FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-bases
-      ######Final
-
-      #i=2
-      for (i in 1:length(FINAL[grep(pattern = "pct$", x = colnames(FINAL), perl = T)])) {
-        #Pegado de simbolo % a frecuencias
-
-        pegadoPct<-c(paste0(FINAL[grep(pattern = "pct$", x = colnames(FINAL), perl = T)][,i],"%"))
-        #FINAL[grep(pattern = "pct$", x = colnames(FINAL), perl = T)][i]<-pegadoPct
-
-        FINAL[-nrow(FINAL) ,grep(pattern = "pct$", x = colnames(FINAL), perl = T)][i]<-pegadoPct[-length(pegadoPct)]
-
-        #Elimina espacios entre diferencias significativas
-        #NOTA, LAS DIFERENCIAS ESTAN ALMACENADAS COMO LISTAS
-        colDif<-(FINAL[grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)][[i]])
-
-        pegadoDif<-gsub(pattern = " ", replacement = "", x =colDif , fixed = T)
-
-        #Pegado de diferencias significativas a porcentajes
-        FINAL[-nrow(FINAL) ,grep(pattern = "pct$", x = colnames(FINAL), perl = T)][i]<-paste0(FINAL[-nrow(FINAL) ,grep(pattern = "pct$", x = colnames(FINAL), perl = T)][,i]," ",pegadoDif[-length(pegadoDif)])
-
-      }
-
-      nombres<-names(FINAL[grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)])
-      FINAL<-FINAL[c(1, grep(pattern = "pct$", x = colnames(FINAL), perl = T))]
-      colnames(FINAL)[-1]<-nombres
-    }
-
-    #Sustituye los nombres de fila de FINAL por el vector en fTrenombref
-    if(!is.null(fTrenombref)){
-      if(length(fTrenombref)==(nrow(FINAL)-1)){
-        FINAL[,1]<-as.character(FINAL[,1])
-        FINAL[-nrow(FINAL),1]<-fTrenombref
-      }else{
-        warning("frecuentator: El número de elemetos en 'fTrenombref' no es igual al número de filas en la tabla")
-      }
-    }
-
     return(FINAL)
-
   }
 }

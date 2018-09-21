@@ -7,7 +7,8 @@ con las variables limpias y todas otras variables indicadas en la función.
 Principalmente esta función fue creada por que había muchas columnas de una misma pregunta abierta. Lo correcto es juntar
 todas las respuestas en un vector gigante, limpiar ese vector, y despues clonar las columnas pero limpias.}
 \usage{
-importaAbiertas(misDatos, misVaria, micatalog, misVariablesFinales = NULL)
+importaAbiertas(misDatos, misVaria, micatalog,
+  misVariablesFinales = NULL)
 }
 \arguments{
 \item{misDatos}{La tabla principal}
