@@ -5,7 +5,7 @@
 #'@export
 #'@keywords limpiar
 #'@examples
-#'#cleanColumnNames(datos)
+#'#pending
 
 cleanColumnNames<-function(datos){
 

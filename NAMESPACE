@@ -2,6 +2,7 @@
 
 export(UnionMenciones)
 export(acomodo_otros)
+export(cleanColumnNames)
 export(creaSyntaxSPSS)
 export(datagrind)
 export(exportarAbiertas)

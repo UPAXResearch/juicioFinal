@@ -26,6 +26,6 @@ datagrind(lista, esAnidado = F, etiquetas = NULL, tablaUnica = T,
 Descripción pendiente
 }
 \examples{
-datagrind(lista, esAnidado=F, etiquetas=NULL, tablaUnica=T, variablesIguales=T, eVariables = NULL, colapsarPor = NULL)
+#pendiente
 }
 \keyword{Pending}
