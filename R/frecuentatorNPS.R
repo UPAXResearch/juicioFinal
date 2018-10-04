@@ -23,6 +23,8 @@
 
 frecuentatorNPS<-function(fTtabla, fTvariables, fTlevels = T, fbanner = NULL, fTanidado=NULL, fTponderador = NULL, fTsobreQuien = NULL, fTtotal = T, fTprop = F, fTusarNA = F, fTdecimales = 4,  fTtipo=NULL, fTunion=F, fTescala=NULL, fTpctConDif=F){
 
+  letras = c(LETTERS,letters)
+
   if(fTpctConDif==T){
     fTdecimales=0
     fTtipo="P"
@@ -199,7 +201,7 @@ frecuentatorNPS<-function(fTtabla, fTvariables, fTlevels = T, fbanner = NULL, fT
                 int <- c(delta - z * se.hat, delta + z * se.hat)
                 p.value <- 1 - (pnorm(delta/se.hat) * 2 - 1)
                 if(p.value<alpha){
-                  tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt]," ",LETTERS[spw]," ",sep="")
+                  tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt]," ",letras[spw]," ",sep="")
                 }else{
                   tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt],"",sep="")
                 }
@@ -208,7 +210,7 @@ frecuentatorNPS<-function(fTtabla, fTvariables, fTlevels = T, fbanner = NULL, fT
           }
         }
 
-        names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",LETTERS[1:length(tablaSPMirror)],")",sep = "")
+        names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",letras[1:length(tablaSPMirror)],")",sep = "")
         FINALmirror2 <- cbind(FINALmirror2,tablaSPMirror)
       }
       FINALmirror2<-FINALmirror2[nrow(FINALmirror2)-1,]

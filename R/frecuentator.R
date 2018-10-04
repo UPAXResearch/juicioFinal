@@ -54,6 +54,9 @@ frecuentator<- function(
   #vector con nombres para filas
   fTrenombref=NULL
 ){
+
+  letras = c(LETTERS,letters)
+
   if(fTpctConDif==T){
     fTdecimales=0
     fTtipo="P"
@@ -429,7 +432,7 @@ frecuentator<- function(
                     alternative = "greater",
                     correct = T
                   )$p.value<0.05){
-                    tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt]," ",LETTERS[spw]," ",sep="")
+                    tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt]," ",letras[spw]," ",sep="")
                   }else{
                     tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt],"",sep="")
                   }
@@ -438,7 +441,7 @@ frecuentator<- function(
             }
           }
         }
-        names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",LETTERS[1:length(tablaSPMirror)],")",sep = "")
+        names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",letras[1:length(tablaSPMirror)],")",sep = "")
         FINALmirror <- cbind(FINALmirror,tablaSPMirror)
       }
 
