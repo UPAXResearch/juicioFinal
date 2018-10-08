@@ -54,7 +54,8 @@ frecuentator<- function(
   #vector con nombres para filas
   fTrenombref=NULL
 ){
-  letras = c(LETTERS, letters)
+
+  letras = c(LETTERS,letters)
   if(fTpctConDif==T){
     fTdecimales=0
     fTtipo="P"

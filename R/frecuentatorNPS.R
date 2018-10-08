@@ -23,6 +23,7 @@
 
 frecuentatorNPS<-function(fTtabla, fTvariables, fTlevels = T, fbanner = NULL, fTanidado=NULL, fTponderador = NULL, fTsobreQuien = NULL, fTtotal = T, fTprop = F, fTusarNA = F, fTdecimales = 4,  fTtipo=NULL, fTunion=F, fTescala=NULL, fTpctConDif=F){
 
+
   letras = c(LETTERS, letters)
   if(fTpctConDif==T){
     fTdecimales=0
