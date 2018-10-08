@@ -56,7 +56,6 @@ frecuentator<- function(
 ){
 
   letras = c(LETTERS,letters)
-
   if(fTpctConDif==T){
     fTdecimales=0
     fTtipo="P"
@@ -432,6 +431,7 @@ frecuentator<- function(
                     alternative = "greater",
                     correct = T
                   )$p.value<0.05){
+
                     tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt]," ",letras[spw]," ",sep="")
                   }else{
                     tablaSPMirror[spi, spt]<-paste(tablaSPMirror[spi, spt],"",sep="")
@@ -441,6 +441,7 @@ frecuentator<- function(
             }
           }
         }
+
         names(tablaSPMirror) <- paste(names(tablaSPMirror),"(",letras[1:length(tablaSPMirror)],")",sep = "")
         FINALmirror <- cbind(FINALmirror,tablaSPMirror)
       }
@@ -519,10 +520,8 @@ frecuentator<- function(
     totales<- colSums(FINAL[-nrow(FINAL) ,grep(pattern = "pct$", x = colnames(FINAL), perl = T)], na.rm = T)
 
     FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-totales
-
     if(fTpctConDif){
-      bases<- FINAL[nrow(FINAL), grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)]
-
+      bases<- FINAL[nrow(FINAL), grep(pattern = "f\\([A-z]\\)$", x = colnames(FINAL), perl = T)]
       #FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-bases
       FINAL[nrow(FINAL), grep(pattern = "pct$", x = colnames(FINAL), perl = T)]<-bases
       ######Final
@@ -538,7 +537,7 @@ frecuentator<- function(
 
         #Elimina espacios entre diferencias significativas
         #NOTA, LAS DIFERENCIAS ESTAN ALMACENADAS COMO LISTAS
-        colDif<-(FINAL[grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)][[i]])
+        colDif<-(FINAL[grep(pattern = "f\\([A-z]\\)$", x = colnames(FINAL), perl = T)][[i]])
 
         pegadoDif<-gsub(pattern = " ", replacement = "", x =colDif , fixed = T)
 
@@ -547,7 +546,7 @@ frecuentator<- function(
 
       }
 
-      nombres<-names(FINAL[grep(pattern = "f\\([[:upper:]]\\)$", x = colnames(FINAL), perl = T)])
+      nombres<-names(FINAL[grep(pattern = "f\\([A-z]\\)$", x = colnames(FINAL), perl = T)])
       FINAL<-FINAL[c(1, grep(pattern = "pct$", x = colnames(FINAL), perl = T))]
       colnames(FINAL)[-1]<-nombres
     }
