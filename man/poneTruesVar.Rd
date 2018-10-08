@@ -2,17 +2,13 @@
 % Please edit documentation in R/poneTruesVar.R
 \name{poneTruesVar}
 \alias{poneTruesVar}
-\title{Titulo Pendiente}
+\title{Función interta que usa poneTruesBase}
 \usage{
-poneTruesVar(x)
+poneTruesVar(x, extra)
 }
 \arguments{
-\item{x}{Pendiente}
+\item{extra}{}
 }
 \description{
-Descripción pendiente
+Función interta que usa poneTruesBase
 }
-\examples{
-pendiente
-}
-\keyword{frecuencias}

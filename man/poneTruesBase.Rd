@@ -2,17 +2,20 @@
 % Please edit documentation in R/poneTruesBase.R
 \name{poneTruesBase}
 \alias{poneTruesBase}
-\title{Titulo Pendiente}
+\title{Convertir columna en logica}
 \usage{
-poneTruesBase(base, variables)
+poneTruesBase(base, variables, extra = c())
 }
 \arguments{
-\item{x}{Pendiente}
+\item{base}{La base a considerar}
+
+\item{variables}{Las variables a convertir, meterla como vector de strings}
+
+\item{extra}{Algunos caracteres/texto extra para poner FALSE en estos casos}
+}
+\value{
+Data.frame
 }
 \description{
-Descripción pendiente
+Convertir columna en logica
 }
-\examples{
-pendiente
-}
-\keyword{frecuencias}
