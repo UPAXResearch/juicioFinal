@@ -12,7 +12,7 @@
 #' @param ordenar Se puede ordenar la tabla de forma descentente \code{ordenar = "D"} o ascendente \code{ordenar = "A"},
 #' para ordenar requiere que exista una variable de total en las columnas.
 #' @param ponderador Nombre de la variable ponderador, en caso de que exista.
-#' @param diferencias en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
+#' @param prop en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
 #' \code{diferencias = NIVELES} o sobre todas las variables ingresadas (ignorando el total en caso de que exista) \code{diferencias = COLUMNAS}.
 #' @param filtro.filas niveles para remover de las filas ingresadas, de forma predeterminada \code{filtro.filas = c(""," ","-")}.
 #' @param filtro.columnas niveles para remover de las columnas ingresadas.
@@ -30,7 +30,7 @@
 #' # columnas<-c("Total","P8","P13","P18","P23","P29")
 #' # esquema<-c(paste0("Total|",paste0(filas, collapse=",")),"P8|P9","P13|P14","P18|P19","P23|P24","P29|P30")
 #'
-tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",ordenar = FALSE ,ponderador = NA,diferencias = "NIVELES",filtro.filas = c(""," ","-"),filtro.columnas=NA,base.natural=FALSE,usarNA=FALSE,remover.duplicados = TRUE){
+tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",ordenar = FALSE ,ponderador = NA,prop = "NIVELES",filtro.filas = c(""," ","-"),filtro.columnas=NA,base.natural=FALSE,usarNA=FALSE,remover.duplicados = TRUE){
 
 
   ## Revisamos que la base tenga casos
@@ -410,7 +410,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     letras = c(LETTERS, letters)
     diferencias<-gsub(" ","",toupper(diferencias))
     diferencias<-NA
-    if(diferencias == "NIVELES"){
+    if(prop == "NIVELES"){
       for(columna in columnas){
         #Se eligen las variables para calculas las diferencias
         seleccion<-nombresR(frecuencias,paste0("^",columna,":::"))
@@ -430,7 +430,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
 
     #### Calculamos las diferencias para las columnas
 
-    if(diferencias == "COLUMNAS"){
+    if(prop == "COLUMNAS"){
       #Se eligen las variables para calculas las diferencias
 
       if(length(which(toupper(colnames(frecuencias))%in%c("FILAS",toupper(colnames(frecuencias))[grep("^TOTAL", toupper(colnames(frecuencias)))] )))>0){

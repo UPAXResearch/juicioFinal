@@ -5,10 +5,9 @@
 \title{Creación de tablas ponderadas o no}
 \usage{
 tablagrid(base, filas = NA, columnas = NA, esquema = NA,
-  tipo = "FP", ordenar = FALSE, ponderador = NA,
-  diferencias = "NIVELES", filtro.filas = c("", " ", "-"),
-  filtro.columnas = NA, base.natural = FALSE, usarNA = FALSE,
-  remover.duplicados = TRUE)
+  tipo = "FP", ordenar = FALSE, ponderador = NA, prop = "NIVELES",
+  filtro.filas = c("", " ", "-"), filtro.columnas = NA,
+  base.natural = FALSE, usarNA = FALSE, remover.duplicados = TRUE)
 }
 \arguments{
 \item{base}{el data frame que contiene la base.}
@@ -27,7 +26,7 @@ para ordenar requiere que exista una variable de total en las columnas.}
 
 \item{ponderador}{Nombre de la variable ponderador, en caso de que exista.}
 
-\item{diferencias}{en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
+\item{prop}{en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
 \code{diferencias = NIVELES} o sobre todas las variables ingresadas (ignorando el total en caso de que exista) \code{diferencias = COLUMNAS}.}
 
 \item{filtro.filas}{niveles para remover de las filas ingresadas, de forma predeterminada \code{filtro.filas = c(""," ","-")}.}
