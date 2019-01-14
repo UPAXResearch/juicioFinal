@@ -357,7 +357,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     colnames(frecuencias)<-c("Filas",paste0(colnames(frecuencias)[-1],":::f"))
   }
 
-  if(tipo %in% c("D","DP","PD","DF","FD") & diferencias%in%c("NIVELES","COLUMNAS")){
+  if(tipo %in% c("D","DP","PD","DF","FD") & prop%in%c("NIVELES","COLUMNAS")){
 
     ###Función para calcular las Diferencias
 
@@ -408,7 +408,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
 
     #### Calculamos las diferencias para los niveles de cada variable por separado
     letras = c(LETTERS, letters)
-    diferencias<-gsub(" ","",toupper(diferencias))
+    prop<-gsub(" ","",toupper(prop))
     diferencias<-NA
     if(prop == "NIVELES"){
       for(columna in columnas){
