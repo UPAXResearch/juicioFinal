@@ -6,12 +6,12 @@
 #' @param base el data frame que contiene la base.
 #' @param filas La variable o variables que se mostraran en las filas, para anidar variables se utilza ":"\code{filas = "Género:Edad"} , puede ser NA cuando se incluye el esquema.
 #' @param columnas La variable o variables que se mostraran en las columnas, para anidar variables se utilza ":"\code{columnas = "Género:Edad"} , puede ser NA cuando se incluye el esquema.
-#' @param esquema Las especificaciones para construir tablas grid.
 #' @param tipo El tipo de tabla resultante, puede generar tablas de frecuencias \code{tipo = "F"}, porcentajes \code{tipo = "P"},
 #' diferencias \code{tipo = "D"}, o tablas combinadas frecuencias y porcentajes \code{tipo =  "FP"}, porcentajes y diferencias \code{tipo = "PD"}.
+#' @param ponderador Nombre de la variable ponderador, en caso de que exista.
 #' @param ordenar Se puede ordenar la tabla de forma descentente \code{ordenar = "D"} o ascendente \code{ordenar = "A"},
 #' para ordenar requiere que exista una variable de total en las columnas.
-#' @param ponderador Nombre de la variable ponderador, en caso de que exista.
+#' @param esquema Las especificaciones para construir tablas grid.
 #' @param prop en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
 #' \code{diferencias = NIVELES} o sobre todas las variables ingresadas (ignorando el total en caso de que exista) \code{diferencias = COLUMNAS}.
 #' @param filtro.filas niveles para remover de las filas ingresadas, de forma predeterminada \code{filtro.filas = c(""," ","-")}.
