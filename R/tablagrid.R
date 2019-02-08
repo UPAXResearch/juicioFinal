@@ -17,9 +17,10 @@
 #' @param filtro.filas niveles para remover de las filas ingresadas, de forma predeterminada \code{filtro.filas = c(""," ","-")}.
 #' @param filtro.columnas niveles para remover de las columnas ingresadas.
 #' @param base.natural usar \code{base.natural = TRUE} en caso de que se desee tener la base natural en la tabla resultante.
-#' @param usarNA si se van a incluir los valores \code{NA} en la tabla.
+#' @param usarNA si se van a mostrar los valores \code{NA} en la tabla.
 #' @param remover.duplicados si se van a remover los valores duplicados en las filas.
-#'
+#' @param total.int determina el metodo que se usara para calcular el total.
+#' #'
 #' @return devuelve una tabla de frecuencias de acuerdo a lo especificado en el parametro "tipo".
 #' @export
 #'
@@ -30,17 +31,15 @@
 #' # columnas<-c("Total","P8","P13","P18","P23","P29")
 #' # esquema<-c(paste0("Total|",paste0(filas, collapse=",")),"P8|P9","P13|P14","P18|P19","P23|P24","P29|P30")
 #'
-tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",ordenar = FALSE ,ponderador = NA,prop = "NIVELES",filtro.filas = c(""," ","-"),filtro.columnas=NA,base.natural=FALSE,usarNA=FALSE,remover.duplicados = TRUE){
+tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, ordenar = FALSE ,esquema=NA ,prop = "NIVELES",filtro.filas = c(""," ","-"),filtro.columnas=NA,base.natural=FALSE,usarNA=FALSE,remover.duplicados = TRUE,total.int=TRUE,decimales=4){
 
-
-  ## Revisamos que la base tenga casos
+    ## Revisamos que la base tenga casos
   if (nrow(base) == 0) {
     FINAL <- data.frame()
     FINAL <- data.frame(row.names = c("Vacio"))
     FINAL$Respuesta <- as.factor("Base sin Casos")
     return(FINAL)
   }
-
 
   ### Validamos los argumentos
   if (all(is.na(filas))&all(is.na(columnas))&all(is.na(esquema))){
@@ -73,7 +72,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
   #El segundo argumento los nombres de las columnas o las filas actualizado
   #El tercer indica si existen variables anidadas
 
-  anidado<-function(base,variables,separador="---",esquema = F){
+  anidado<-function(base,variables,separador=":::",esquema = F){
     variables.anidadas<-0
     variables2<-NA
     for(variable in variables){
@@ -85,9 +84,42 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
                          collapse = ", ")))
       }
       if(length(variable)>1){
+
+
+        ##Pendiente construir un metodo que preserve los niveles en variables anidadas
+        # ##Aqui unificamos los niveles
+        # cfactor<-0
+        # #Revisamos que todas las variables sean factor
+        # for(var.aux in  variable){
+        #   if(is.factor(base[,var.aux]))
+        #     cfactor<-cfactor+1
+        # }
+        #
+        # #Si todas las variables anidadas son factor creamos sus niveles
+        # niveles.aux<-NA
+        #
+        # if(cfactor == length(variable)){
+        #   for(i in 1:(length(variable)-1)){
+        #     niveles.aux<-base[,variable[i]]
+        #     for(j in 1:length(niveles.aux)){
+        #
+        #
+        #     }
+        #
+        #
+        #     }
+        #
+        #   }
+        # }
+
+
+        #seguimos anidando
+
         variables.anidadas<-max(variables.anidadas,length(variable))
         base[,paste0(variable,collapse = "_")]<- apply( base[ ,variable] , 1 , paste , collapse = separador )
         variables2<-c(variables2,paste0(variable,collapse = "_"))
+
+
       }else{
         variables2<-c(variables2,variable)
       }
@@ -159,10 +191,27 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     }
   }
 
-
   variables<-unique(c(filas,columnas))
   base<-base[,c("pond",variables)]
   base$ID<-rep(1:nrow(base))
+
+
+  ### Calculo del total inteligente
+  if(total.int == TRUE){
+    base.aux<-reshape2::melt(base[,c("ID",filas)],id = c("ID"))
+    #Metodo para identificar valores vacios en una sola variable
+    base.aux$smart<-ifelse(base.aux$value%in%c(""," ","-")|is.na(base.aux$value),FALSE,TRUE)
+    #Metodo para identificar valores vacios en variables anidadas
+    filas.vacias.smart<-grep(":::NA:::|::::::|^NA:::|^:::|:::$|:::NA$",base.aux$value)
+    if(length(filas.vacias.smart)>0){
+      base.aux<-base.aux[-filas.vacias.smart,]
+    }
+    base.aux<-base.aux[base.aux$smart==TRUE,]
+    unique.ids<-unique(base.aux$ID)
+    base.aux<-NULL
+    base<-base[base$ID%in%unique.ids,]
+  }
+
 
   ### Se filtran los valores indicados
 
@@ -288,13 +337,13 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
   if(usarNA == F){
     #Limpiamos las filas
     frecuencias<-frecuencias[!is.na(frecuencias$Filas),]
-    filas.vacias<-grep("---NA---|------|^NA---|^---|---$|---NA$",frecuencias$Filas)
+    filas.vacias<-grep(":::NA:::|::::::|^NA:::|^:::|:::$|:::NA$",frecuencias$Filas)
     if(length(filas.vacias)>0){
       frecuencias<-frecuencias[-filas.vacias,]
     }
 
     ##limpiamos las columnas
-    columnas.vacias<-grep("---NA---|------|^NA---|^---|---$|---NA$",colnames(frecuencias))
+    columnas.vacias<-grep(":::NA:::|::::::|^NA:::|^:::|:::$|:::NA$",colnames(frecuencias))
     if(length(columnas.vacias)>0){
       frecuencias<-frecuencias[,-columnas.vacias]
     }
@@ -303,30 +352,32 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     }
   }
 
-  ### Añadimos el total ponderado
-  base$variable_de_conteo<-rep(1)
-  if(is.na(ponderador)){
-    total.ponderado<-Frecuencias(base,"variable_de_conteo",columnas)
-    total.ponderado[1]<-"Total"
-    frecuencias<-rbind(frecuencias,total.ponderado)
-  }else{
-    total.ponderado<-Frecuencias(base,"variable_de_conteo",columnas)
-    total.ponderado[1]<-"Total"
-    frecuencias<-rbind(frecuencias,total.ponderado)
-  }
+#####Hacemos el calculo del total
+
+    ### Añadimos el total ponderado
+    base$variable_de_conteo<-rep(1)
+    if(is.na(ponderador)){
+      total.ponderado<-Frecuencias(base,"variable_de_conteo",columnas)
+      total.ponderado[1]<-"Total"
+      frecuencias<-rbind(frecuencias,total.ponderado)
+    }else{
+      total.ponderado<-Frecuencias(base,"variable_de_conteo",columnas)
+      total.ponderado[1]<-"Total"
+      frecuencias<-rbind(frecuencias,total.ponderado)
+    }
+
+    ## Calculamos el total natural
+
+    if(base.natural == TRUE){
+      total.natural<-Frecuencias(base,"variable_de_conteo",columnas,"variable_de_conteo")
+      total.natural[1]<-"Total Natural"
+      numero.totales<-2
+    }else{
+      numero.totales<-1
+    }
 
 
 
-
-  ## Calculamos el total natural
-
-  if(base.natural == TRUE){
-    total.natural<-Frecuencias(base,"variable_de_conteo",columnas,"variable_de_conteo")
-    total.natural[1]<-"Total Natural"
-    numero.totales<-2
-  }else{
-    numero.totales<-1
-  }
 
 
   ###########El resultado lo determina el argumento fTtipo.
@@ -343,6 +394,10 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     if(base.natural == TRUE){
       porcentajes<-rbind(porcentajes,total.natural)
     }
+
+    #Se redondean los porcentajes
+    porcentajes[,2:ncol(porcentajes)]<-round(porcentajes[,2:ncol(porcentajes)],decimales)
+
     #Se añade el tipo al nombre de las columnas para la macro de formato
     colnames(porcentajes)<-c("Filas",paste0(colnames(porcentajes)[-1],":::pct"))
   }
@@ -353,6 +408,10 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
     if(base.natural == TRUE){
       frecuencias<-rbind(frecuencias,total.natural)
     }
+
+    #Se redondean los porcentajes
+    frecuencias[,2:ncol(frecuencias)]<-round(frecuencias[,2:ncol(frecuencias)],decimales)
+
     #Se añade el tipo al nombre de las columnas para la macro de formato
     colnames(frecuencias)<-c("Filas",paste0(colnames(frecuencias)[-1],":::f"))
   }
@@ -393,7 +452,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
                                 n = c(objetivoTotal, competidorTotal),
                                 alternative = "greater", correct = T)$p.value <
                       0.05) {
-                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], "", letras[comp.columna], "", sep = "")
+                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], " ", letras[comp.columna], " ", sep = " ")
                   }
                   else {
                     diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], "", sep = "")  }  }  }}
@@ -518,7 +577,7 @@ tablagrid<-function(base,filas = NA,columnas = NA, esquema=NA ,tipo = "FP",orden
   # form<-function(tabla,num.niveles,formato){
   #   if(num.niveles>1){
   #     frecuencias.formato<-NA
-  #     frecuencias<-tidyr::separate(frecuencias,Filas,paste0("Filas",num.niveles:1),sep="---",remove = TRUE)
+  #     frecuencias<-tidyr::separate(frecuencias,Filas,paste0("Filas",num.niveles:1),sep=":::",remove = TRUE)
   #
   #     for(i in 2:num.niveles){
   #       niveles<-unique(frecuencias[,paste0("Filas",i)])
