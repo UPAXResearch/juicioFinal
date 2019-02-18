@@ -4,10 +4,11 @@
 \alias{tablagrid}
 \title{Creación de tablas ponderadas o no}
 \usage{
-tablagrid(base, filas = NA, columnas = NA, esquema = NA,
-  tipo = "FP", ordenar = FALSE, ponderador = NA, prop = "NIVELES",
+tablagrid(base, filas = NA, columnas = NA, tipo = "FP",
+  ponderador = NA, ordenar = FALSE, esquema = NA, prop = "NIVELES",
   filtro.filas = c("", " ", "-"), filtro.columnas = NA,
-  base.natural = FALSE, usarNA = FALSE, remover.duplicados = TRUE)
+  base.natural = FALSE, usarNA = FALSE, remover.duplicados = TRUE,
+  total.int = TRUE, decimales = 4)
 }
 \arguments{
 \item{base}{el data frame que contiene la base.}
@@ -16,15 +17,15 @@ tablagrid(base, filas = NA, columnas = NA, esquema = NA,
 
 \item{columnas}{La variable o variables que se mostraran en las columnas, para anidar variables se utilza ":"\code{columnas = "Género:Edad"} , puede ser NA cuando se incluye el esquema.}
 
-\item{esquema}{Las especificaciones para construir tablas grid.}
-
 \item{tipo}{El tipo de tabla resultante, puede generar tablas de frecuencias \code{tipo = "F"}, porcentajes \code{tipo = "P"},
 diferencias \code{tipo = "D"}, o tablas combinadas frecuencias y porcentajes \code{tipo =  "FP"}, porcentajes y diferencias \code{tipo = "PD"}.}
+
+\item{ponderador}{Nombre de la variable ponderador, en caso de que exista.}
 
 \item{ordenar}{Se puede ordenar la tabla de forma descentente \code{ordenar = "D"} o ascendente \code{ordenar = "A"},
 para ordenar requiere que exista una variable de total en las columnas.}
 
-\item{ponderador}{Nombre de la variable ponderador, en caso de que exista.}
+\item{esquema}{Las especificaciones para construir tablas grid.}
 
 \item{prop}{en este parametro se especifica si la prueba de proporciones se realizara sobre los niveles internos de cada variable
 \code{diferencias = NIVELES} o sobre todas las variables ingresadas (ignorando el total en caso de que exista) \code{diferencias = COLUMNAS}.}
@@ -35,9 +36,12 @@ para ordenar requiere que exista una variable de total en las columnas.}
 
 \item{base.natural}{usar \code{base.natural = TRUE} en caso de que se desee tener la base natural en la tabla resultante.}
 
-\item{usarNA}{si se van a incluir los valores \code{NA} en la tabla.}
+\item{usarNA}{si se van a mostrar los valores \code{NA} en la tabla.}
 
 \item{remover.duplicados}{si se van a remover los valores duplicados en las filas.}
+
+\item{total.int}{determina el metodo que se usara para calcular el total.
+#'}
 }
 \value{
 devuelve una tabla de frecuencias de acuerdo a lo especificado en el parametro "tipo".
