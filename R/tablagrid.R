@@ -388,8 +388,14 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
   if(tipo %in% c("P","FP","PF","DP","PD")){
     porcentajes<-as.data.frame(sweep(as.matrix(frecuencias[-1]), 2, c(unlist(total.ponderado[-1])), `/`))
     porcentajes<-porcentajes*100
-    porcentajes<-cbind(frecuencias[1],porcentajes)
     # porcentajes<-rbind(porcentajes,total.ponderado)
+
+    ##Aqui hacemos que el total de los porcentajes sea la suma
+    porcentajes[nrow(porcentajes),]<-colSums(porcentajes[-nrow(porcentajes),,drop = FALSE])
+
+    #Añadimos el nombre de las filas
+    porcentajes<-cbind(frecuencias[1],porcentajes)
+
 
     if(base.natural == TRUE){
       porcentajes<-rbind(porcentajes,total.natural)
@@ -411,6 +417,8 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
 
     #Se redondean los porcentajes
     frecuencias[,2:ncol(frecuencias)]<-round(frecuencias[,2:ncol(frecuencias)],decimales)
+
+
 
     #Se añade el tipo al nombre de las columnas para la macro de formato
     colnames(frecuencias)<-c("Filas",paste0(colnames(frecuencias)[-1],":::f"))
@@ -452,7 +460,7 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
                                 n = c(objetivoTotal, competidorTotal),
                                 alternative = "greater", correct = T)$p.value <
                       0.05) {
-                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], " ", letras[comp.columna], " ", sep = " ")
+                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], " ", letras[comp.columna], " ", sep = "")
                   }
                   else {
                     diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], "", sep = "")  }  }  }}
@@ -604,3 +612,5 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
   # }
 
 }
+
+
