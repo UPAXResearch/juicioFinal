@@ -61,7 +61,7 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
     ponderado<-FALSE
   }else{
     ponderado<-TRUE
-    base$pond<-base[,ponderador]
+    base$pond<-as.numeric(as.character(base[,ponderador]))
   }
 
 
@@ -191,7 +191,15 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
     }
   }
 
+  #Creamos un vector que contenga todas las variables
   variables<-unique(c(filas,columnas))
+  ###Convertimos todas las variables a factor
+  for(variable in variables){
+    if(!is.factor(base[,variable])){
+      base[,variable]<-as.factor(base[,variable])
+    }
+  }
+
   base<-base[,c("pond",variables)]
   base$ID<-rep(1:nrow(base))
 
@@ -243,13 +251,15 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
     frecuencias.columnas<-NA
 
     for(fila in filas){
+      #Valida que la fila tenga información
+      if(!all(is.na(base[,fila]))){
       for(columna in columnas){
         #dplyr version
         # frecuencias.aux<- base %>% count(PLAZA_Genero,Tipo_Paquete_Genero) %>% spread(Tipo_Paquete_Genero, n, fill=0)
         # frecuencias.aux <- base %>% group_by(PLAZA_Genero,Tipo_Paquete_Genero) %>% summarise(Conteo = n())
         ## Reshape2
         ### Calculo de las frecuencias por fila y por columna
-        frecuencias.aux<-reshape2::dcast(base, list(fila,columna), value.var = value.var, fun.aggregate = sum ,drop = T)
+        frecuencias.aux<-reshape2::dcast(base, list(fila,columna), value.var = value.var, fun.aggregate = sum ,drop = F)
         #Se eliminan las columnas que solo contienen NA
         columnaNA<-which(colnames(frecuencias.aux)%in%"NA")
         if(length(columnaNA)>=1){
@@ -276,7 +286,7 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
       }
       frecuencias.columnas<-NA
     }
-
+    }
     return(frecuencias)
   }
 
@@ -460,7 +470,7 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
                                 n = c(objetivoTotal, competidorTotal),
                                 alternative = "greater", correct = T)$p.value <
                       0.05) {
-                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], " ", letras[comp.columna], " ", sep = "")
+                    diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], "", letras[comp.columna], "", sep = "")
                   }
                   else {
                     diferencias.aux[nfila, ncolumna] <- paste(diferencias.aux[nfila, ncolumna], "", sep = "")  }  }  }}
@@ -572,7 +582,7 @@ tablagrid<-function(base,filas = NA,columnas = NA,tipo = "FP",ponderador = NA, o
 
     for(i in 2:ncol(resultado)){
       for(j in 1:(nrow(resultado)-numero.totales)){
-        resultado[j,i]<-paste0(resultado[j,i],"%",diferencias[j,i])
+        resultado[j,i]<-paste0(resultado[j,i],"% ",diferencias[j,i])
       }
     }
     return(resultado)

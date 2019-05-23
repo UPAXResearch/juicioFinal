@@ -19,6 +19,8 @@ UnionMenciones(base, variables, identificador, palabrasNegras)
 Descripción pendiente
 }
 \examples{
-pendiente
+iris$ID<-1:nrow(iris)
+iris$Species2<-iris$Species
+UnionMenciones(base=iris,variables = c('Species'),identificador = 'ID', palabrasNegras = c(''))
 }
 \keyword{frecuencias}
